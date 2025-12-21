@@ -1,5 +1,5 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react"; // getSession add kiya
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -13,18 +13,28 @@ export default function LoginForm() {
     e.preventDefault();
     setLoading(true);
     
+    // 1. Credentials ke zariye sign-in
     const result = await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      redirect: false, // Manual redirect handle karenge
     });
 
     if (result?.error) {
       alert("Invalid credentials!");
       setLoading(false);
     } else {
-      router.push("/"); 
-      router.refresh(); // Session refresh karne ke liye
+      // 2. Login ke baad foran naya session fetch karein taake 'role' mil jaye
+      const session = await getSession();
+
+      // 3. Role-based Redirection Logic
+      if (session?.user?.role === "admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/");
+      }
+
+      router.refresh(); 
     }
   };
 
