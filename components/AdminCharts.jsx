@@ -12,11 +12,21 @@ export default function AdminCharts({ data, total }) {
         <div className="h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <Pie data={data} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
-                {data.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
+              <Pie 
+                data={data} 
+                innerRadius={60} 
+                outerRadius={80} 
+                paddingAngle={5} 
+                dataKey="value"
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.fill} />
+                ))}
               </Pie>
-              <Tooltip contentStyle={{ backgroundColor: "#0f172a", border: "none", borderRadius: "8px", color: "#fff" }} />
-              <Legend verticalAlign="bottom" height={36}/>
+              <Tooltip 
+                contentStyle={{ backgroundColor: "#0f172a", border: "none", borderRadius: "8px", color: "#fff" }} 
+              />
+              <Legend verticalAlign="bottom" height={36} />
             </PieChart>
           </ResponsiveContainer>
         </div>
