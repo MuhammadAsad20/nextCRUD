@@ -1,64 +1,108 @@
 "use client";
+import { 
+  Sidebar, SidebarContent, SidebarHeader, SidebarFooter, 
+  SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel 
+} from "@/components/ui/sidebar";
+import { LayoutDashboard, Users, BarChart3, LogOut, Database } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, CheckSquare, Settings, LogOut } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
-import { signOut } from "next-auth/react"; // 1. Ye import karein
-
-const menuItems = [
-  { name: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
-  { name: "Manage Users", icon: Users, href: "/admin/users" },
-  { name: "Tasks Control", icon: CheckSquare, href: "/admin/tasks" },
-  { name: "Settings", icon: Settings, href: "/admin/settings" },
-];
+import { signOut } from "next-auth/react";
 
 export default function AppSidebar({ user }) {
-  const pathname = usePathname();
+  const isAdmin = user?.role === "admin";
 
   return (
-    <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-64 bg-slate-900 border-r border-slate-800 flex-col z-50">
-      <div className="p-8">
-        <h2 className="text-2xl font-black text-white tracking-tighter italic">
-          NEXT<span className="text-indigo-500 underline">CRUD</span>
-        </h2>
-      </div>
+    // ✅ Yahan !bg-slate-950 aur !border-slate-800 add kiya hai taake white color override ho jaye
+    <Sidebar collapsible="icon" className="!bg-slate-950 !border-slate-800 border-r">
+      
+      {/* Header Area */}
+      <SidebarHeader className="h-20 flex items-center justify-center !bg-slate-950 border-b border-slate-800/30">
+        <Link href="/">
+        <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
+          <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg border border-indigo-400/30 transition-transform hover:rotate-12">
+            <Database className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex flex-col group-data-[collapsible=icon]:hidden">
+            <span className="font-black text-indigo-400 text-xl tracking-tighter leading-none">
+              Focus<span className="text-white">Board</span>
+            </span>
+          </div>
+        </div>
+        </Link>
+      </SidebarHeader>
 
-      <nav className="flex-1 px-4 space-y-2">
-        {menuItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                buttonVariants({ variant: isActive ? "default" : "ghost" }),
-                "w-full justify-start gap-3 h-12 rounded-xl transition-all",
-                isActive 
-                  ? "bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-600/20" 
-                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
-              )}
+      {/* Content Area */}
+      <SidebarContent className="!bg-slate-950 p-3 space-y-6">
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-slate-500 text-[10px] uppercase tracking-[0.25em] mb-4 px-4 font-bold">Main Dashboard</SidebarGroupLabel>
+          <SidebarMenu className="space-y-2">
+            
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild className="h-12 rounded-2xl text-slate-300 hover:!bg-slate-900 hover:!text-white transition-all group border border-transparent hover:border-slate-800">
+                <Link href="/dashboard">
+                  <LayoutDashboard className="w-5 h-5 text-indigo-500 group-hover:text-indigo-400" />
+                  <span className="font-semibold">Overview</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            {isAdmin && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild className="h-12 rounded-2xl text-slate-300 hover:!bg-indigo-600/10 hover:!text-indigo-400 border border-transparent hover:border-indigo-500/20 shadow-indigo-500/5">
+                  <Link href="/dashboard/admin">
+                    <BarChart3 className="w-5 h-5 text-indigo-500 animate-pulse" />
+                    <span className="font-bold tracking-wide italic">Admin Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
+
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild className="h-12 rounded-2xl text-slate-300 hover:!bg-slate-900 hover:!text-white transition-all group border border-transparent hover:border-slate-800">
+                <Link href="/dashboard/tasks">
+                  <Users className="w-5 h-5 text-indigo-500 group-hover:text-indigo-400" />
+                  <span className="font-semibold">My Task</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            {isAdmin && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild className="h-12 rounded-2xl text-slate-300 hover:!bg-indigo-600/10 hover:!text-indigo-400 border border-transparent hover:border-indigo-500/20 shadow-indigo-500/5">
+                  <Link href="/dashboard/users">
+                    <BarChart3 className="w-5 h-5 text-indigo-500 animate-pulse" />
+                    <span className="font-bold tracking-wide italic">Member List</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
+
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild className="h-12 rounded-2xl text-slate-300 hover:!bg-slate-900 hover:!text-white transition-all group border border-transparent hover:border-slate-800">
+                <Link href="/dashboard/profile">
+                  <LayoutDashboard className="w-5 h-5 text-indigo-500 group-hover:text-indigo-400" />
+                  <span className="font-semibold">My Profile</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarContent>
+
+      {/* Footer Area */}
+      <SidebarFooter className="p-4 border-t border-slate-800/30 !bg-slate-950">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={() => signOut()} 
+              className="h-12 rounded-2xl text-red-400 hover:!bg-red-500/10 hover:!text-red-300 transition-all w-full flex items-center gap-3 border border-transparent hover:border-red-500/20"
             >
-              <item.icon className={cn("w-5 h-5", isActive ? "text-white" : "text-slate-500")} />
-              <span className="font-semibold tracking-wide">{item.name}</span>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* 2. Logout Button Section */}
-      <div className="p-4 border-t border-slate-800">
-        <button 
-          onClick={() => signOut({ callbackUrl: "/" })} // 3. Click handler add kiya
-          className={cn(
-            buttonVariants({ variant: "ghost" }), 
-            "w-full justify-start gap-3 text-slate-400 hover:text-red-500 hover:bg-red-500/10 h-12 rounded-xl"
-          )}
-        >
-          <LogOut className="w-5 h-5" />
-          <span className="font-semibold">Logout</span>
-        </button>
-      </div>
-    </aside>
+              <LogOut className="w-5 h-5" />
+              <span className="group-data-[collapsible=icon]:hidden font-bold tracking-wide">Log out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

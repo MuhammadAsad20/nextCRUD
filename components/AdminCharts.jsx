@@ -5,27 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function AdminCharts({ data, total }) {
   return (
     <Card className="bg-slate-900 border-slate-800 h-full shadow-2xl">
-      <CardHeader>
-        <CardTitle className="text-white">Task Distribution</CardTitle>
-      </CardHeader>
+      <CardHeader><CardTitle className="text-white">Task Distribution</CardTitle></CardHeader>
       <CardContent className="flex flex-col items-center">
         <div className="h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <Pie 
-                data={data} 
-                innerRadius={60} 
-                outerRadius={80} 
-                paddingAngle={5} 
-                dataKey="value"
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
-                ))}
+              <Pie data={data} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
+                {data.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
               </Pie>
-              <Tooltip 
-                contentStyle={{ backgroundColor: "#0f172a", border: "none", borderRadius: "8px", color: "#fff" }} 
-              />
+              <Tooltip contentStyle={{ backgroundColor: "#0f172a", border: "none", borderRadius: "8px", color: "#fff" }} />
               <Legend verticalAlign="bottom" height={36} />
             </PieChart>
           </ResponsiveContainer>
